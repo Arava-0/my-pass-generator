@@ -36,31 +36,38 @@ Examples:
 	Deno.exit(0);
 }
 
-const { values } = parseArgs({
-	options: {
-		length: { type: "string", short: "l" },
-		count: { type: "string", short: "c", default: "1" },
-		raw: { type: "boolean", default: false },
-		"no-upper": { type: "boolean", short: "U", default: false },
-		"no-lower": { type: "boolean", short: "L", default: false },
-		"no-digits": { type: "boolean", short: "D", default: false },
-		"no-symbols": { type: "boolean", short: "S", default: false },
-		"symbol-set": { type: "string" },
-		"exclude-ambiguous": { type: "boolean", short: "x", default: false },
-		exclude: { type: "string" },
-		"no-require-each": { type: "boolean", default: false },
-		separator: { type: "string", default: "\n" },
-		"block-size": { type: "string" },
-		"block-sep": { type: "string", default: "-" },
-		help: { type: "boolean", short: "h", default: false },
-	},
-	strict: true,
-	allowPositionals: false,
-});
+const OPTIONS = {
+	length: { type: "string", short: "l" },
+	count: { type: "string", short: "c", default: "1" },
+	raw: { type: "boolean", default: false },
+	"no-upper": { type: "boolean", short: "U", default: false },
+	"no-lower": { type: "boolean", short: "L", default: false },
+	"no-digits": { type: "boolean", short: "D", default: false },
+	"no-symbols": { type: "boolean", short: "S", default: false },
+	"symbol-set": { type: "string" },
+	"exclude-ambiguous": { type: "boolean", short: "x", default: false },
+	exclude: { type: "string" },
+	"no-require-each": { type: "boolean", default: false },
+	separator: { type: "string", default: "\n" },
+	"block-size": { type: "string" },
+	"block-sep": { type: "string", default: "-" },
+	help: { type: "boolean", short: "h", default: false },
+} as const;
 
-if (values.help) printHelp();
+if (Deno.args.includes("--help") || Deno.args.includes("-h") || Deno.args.includes("-help")) {
+	printHelp();
+}
 
-const isRaw = values.raw!;
+let values: typeof parsed.values;
+try {
+	var parsed = parseArgs({ options: OPTIONS, strict: true, allowPositionals: false });
+	values = parsed.values;
+} catch (e) {
+	console.error(`Error: ${(e as Error).message}\nRun "passgen --help" for usage.`);
+	Deno.exit(1);
+}
+
+const isRaw = values.raw;
 const isSafe = !isRaw;
 
 const length = values.length
