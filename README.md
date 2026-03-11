@@ -286,4 +286,4 @@ Options:
 
 ## License
 
-MIT
+[MIT](LICENSE)
