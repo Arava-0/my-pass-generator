@@ -1,0 +1,91 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - ".github/workflows/release.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.bump.outputs.new_tag }}
+      skipped: ${{ steps.bump.outputs.skipped }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version
+        id: bump
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: major
+          WITH_V: true
+          MAJOR_STRING_TOKEN: none
+          MINOR_STRING_TOKEN: none
+          PATCH_STRING_TOKEN: none
+
+  build:
+    needs: version
+    if: needs.version.outputs.skipped != 'true'
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact: passgen-linux-x64
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            artifact: passgen-linux-arm64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact: passgen-windows-x64.exe
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact: passgen-macos-x64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact: passgen-macos-arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Compile binary
+        run: deno compile --target ${{ matrix.target }} --output ${{ matrix.artifact }} src/cli.ts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+
+  release:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version.outputs.tag }}
+          generate_release_notes: true
+          files: artifacts/*
