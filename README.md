@@ -28,10 +28,10 @@ Construit avec [Deno](https://deno.land/) et [TypeScript](https://www.typescript
 
 ```bash
 $ passgen
-eEx@++tHsTy-^2A?DRfv7z@-wYSicHfb66c-ChTeh+5mqZk-+rC@
+Xt7wkR9mFpN-z4v8eQjYdAH-w2xKcM6gBsT-5nRfWq3jPab
 ```
 
-- 48 caracteres, blocs de 11 separes par `-`
+- 44 caracteres, blocs de 11 separes par `-`
 - Exclut les caracteres ambigus et ceux qui cassent les shells/env/SQL/URLs
 
 #### Mode raw
@@ -78,7 +78,7 @@ deno compile --output passgen passgen.ts
 ### Utilisation
 
 ```bash
-# Defaut : safe mode, 48 chars, blocs de 11
+# Defaut : safe mode, 44 chars, blocs de 11
 passgen
 
 # 5 mots de passe
@@ -113,12 +113,12 @@ passgen --block-size 8 --block-sep "."
 
 ```
 Modes:
-  (defaut)                Safe mode — 48 chars, blocs de 11 separes par "-",
+  (defaut)                Safe mode — 44 chars, blocs de 11 separes par "-",
                           exclut les caracteres ambigus et dangereux
   --raw                   Raw mode — 32 chars, tous les caracteres, pas de blocs
 
 Options:
-  -l, --length <n>        Longueur du mot de passe (defaut: 48 safe / 32 raw)
+  -l, --length <n>        Longueur du mot de passe (defaut: 44 safe / 32 raw)
   -c, --count <n>         Nombre de mots de passe (defaut: 1)
   -U, --no-upper          Desactiver les majuscules
   -L, --no-lower          Desactiver les minuscules
@@ -167,10 +167,10 @@ Built with [Deno](https://deno.land/) and [TypeScript](https://www.typescriptlan
 
 ```bash
 $ passgen
-eEx@++tHsTy-^2A?DRfv7z@-wYSicHfb66c-ChTeh+5mqZk-+rC@
+Xt7wkR9mFpN-z4v8eQjYdAH-w2xKcM6gBsT-5nRfWq3jPab
 ```
 
-- 48 characters, blocks of 11 separated by `-`
+- 44 characters, 4 blocks of 11 separated by `-`
 - Excludes ambiguous chars and those that break shells/env/SQL/URLs
 
 #### Raw mode
@@ -217,7 +217,7 @@ deno compile --output passgen passgen.ts
 ### Usage
 
 ```bash
-# Default: safe mode, 48 chars, blocks of 11
+# Default: safe mode, 44 chars, 4 blocks of 11
 passgen
 
 # 5 passwords
@@ -252,12 +252,12 @@ passgen --block-size 8 --block-sep "."
 
 ```
 Modes:
-  (default)               Safe mode — 48 chars, blocks of 11 separated by "-",
+  (default)               Safe mode — 44 chars, 4 blocks of 11 separated by "-",
                           excludes ambiguous & env-breaking characters
   --raw                   Raw mode — 32 chars, all characters, no blocks
 
 Options:
-  -l, --length <n>        Password length (default: 48 safe / 32 raw)
+  -l, --length <n>        Password length (default: 44 safe / 32 raw)
   -c, --count <n>         Number of passwords (default: 1)
   -U, --no-upper          Disable uppercase letters
   -L, --no-lower          Disable lowercase letters
